@@ -1,4 +1,13 @@
 # Pester Infrastructure Tests
+
+## BeforeAll Block
+The BeforeAll block runs before all tests in a script, so it's usually a good idea to define your variables in this block such as the computer name of the remote computer and also to create a CIM session to the remote computer for use throughout the tests.
+```powershell
+BeforeAll {
+    $ComputerName = 'SQLSERVER01'
+    $CimSession = New-CimSession -ComputerName $ComputerName
+}
+```
 ## Example Tests
 ### Test if a Windows service status is running
 ```powershell
@@ -7,7 +16,7 @@ Describe "Services" {
         BeforeEach {
             $Params = @{
                 ClassName = 'Win32_Service'
-                ComputerName = 'SQLServ01'
+                ComputerName = 'SQLSERVER01'
                 Filter = "Name like 'MSSQLSERVER' "
             }
             $Service = Get-CimInstance @Params
@@ -25,7 +34,7 @@ Describe "Services" {
         BeforeEach {
             $Params = @{
                 ClassName = 'Win32_Service'
-                ComputerName = 'SQLServ01'
+                ComputerName = 'SQLSERVER01'
                 Filter = "Name like 'MSSQLSERVER' "
             }
             $Service = Get-CimInstance @Params
@@ -41,7 +50,7 @@ Describe "Services" {
 Describe "D: Drive Folder Structure" {
     Context "D:\SQL Backup folder exists" {
         It "Should be true" {
-            $Path = Invoke-Command -ScriptBlock {Test-Path 'D:\SQL Backup'} -ComputerName 'SQLServ01'
+            $Path = Invoke-Command -ScriptBlock {Test-Path 'D:\SQL Backup'} -ComputerName 'SQLSERVER01'
             $Path | Should -Be 'True'
         }
     }
