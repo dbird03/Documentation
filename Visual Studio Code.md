@@ -64,6 +64,8 @@ JSON Snippet:
 } // End ExportPath
 ```
 PowerShell Result:
+ 
+ (Note: The tab spacing in the PowerShell Result does not display correctly on GitHub.com)
 ```powershell
 $Params = @{
     User		= ''
