@@ -1,5 +1,10 @@
 # PowerShell - General
 
+### Force PowerShell to use TLS 1.2
+```powershell
+[System.Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+```
+
 ### Easily convert block of text into an array
 Reference: (http://pleasework.robbievance.net/howto-easily-convert-block-of-text-into-an-array-in-powershell/)
 ```powershell
