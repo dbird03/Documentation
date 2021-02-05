@@ -5,6 +5,8 @@
 [System.Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 ```
 
+***
+
 ### Easily convert block of text into an array
 Reference: (http://pleasework.robbievance.net/howto-easily-convert-block-of-text-into-an-array-in-powershell/)
 ```powershell
@@ -34,7 +36,6 @@ Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
     742      53    20900      16980      41.81   8144   1 OneDrive
 ```
 
-
 ***
 
 ### Use an array in an Active Directory cmdlet -Filter parameter
@@ -52,6 +53,8 @@ $FilterString = "Department -like '$($Array -join "' -or Department -like '")'"
 # Use the filter string
 Get-ADUser -Filter $FilterString
 ```
+
+***
 
 ### Progress bar in a foreach loop
 ```powershell
@@ -75,6 +78,7 @@ foreach ($Group in $Groups)
     $Counter += 1
 }
 ```
+
 ***
 
 ### Get Windows Updates/Patches
@@ -82,10 +86,14 @@ foreach ($Group in $Groups)
 Get-Hotfix -ComputerName SEA-SRV-01 | Select-Object HotfixID, Description, InstalledOn | Sort-Object InstalledOn
 ```
 
+***
+
 ### Dynamically set the $ExportPath variable to the user's desktop
 ```powershell
 $ExportPath = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::Desktop) # This sets the export path to the user's desktop
 ```
+
+***
 
 ### Test if a module is installed and available for import
 ```powershell
@@ -100,14 +108,15 @@ else
     throw "Module $($Module) is NOT installed" # Throw an error message and do not continue the rest of the code
 }
 ```
+
 ***
 
 ### Select only the first object instead of all objects
 ```powershell
 Get-Process | Select-Object -First 1
 ```
-***
 
+***
 
 ### Why $null should be placed on the left side of equality comparisons.
 
@@ -129,23 +138,7 @@ PS 14:15:31 PM C:\> if ($null -ne @()) { 'true' }else { 'false' }
 true
 ```
 
-### Find certificates
-
-Reference: [Find certificates using PowerShell](http://www.herlitz.nu/2017/11/09/find-certificates-using-powershell/) | Eric Herlitz
-
-```powershell
-# List any certificates with a FriendlyName containing DigiCert
-dir cert: -Recurse | Where-Object { $_.FriendlyName -like "*DigiCert*" }
-
-# List any certificates with a thumbprint containing 0563B8630D62D75ABBC8AB1E4B
-dir cert: -Recurse | Where-Object { $_.Thumbprint -like "*0563B8630D62D75ABBC8AB1E4B*" }
-
-# List any certificates that isn't valid after the 31 Dec 2018
-dir cert: -Recurse | Where-Object { $_.NotAfter -lt (Get-Date 2018-12-31) }
-
-# List any certificates that will expire the upcomming year, from now and one year ahead
-dir cert: -Recurse | Where-Object { $_.NotAfter -gt (Get-Date) -and $_.NotAfter -lt (Get-Date).AddYears(1) }
-```
+***
 
 ### Combine multiple CSVs with the same header
 
