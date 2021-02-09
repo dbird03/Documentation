@@ -1,4 +1,4 @@
-# Pester Infrastructure Tests
+# PowerShell - Pester Infrastructure Tests
 
 ## BeforeAll Block
 The BeforeAll block runs before all tests in a script, so it's usually a good idea to define your variables in this block such as the computer name of the remote computer and also to create a CIM session to the remote computer for use throughout the tests.
@@ -8,10 +8,16 @@ BeforeAll {
     $CimSession = New-CimSession -ComputerName $ComputerName
 }
 ```
-## Example Tests
-### Test if a Windows service status is running
+
+
+
+# Example Tests
+
+## Windows Services
+
+### Test the status/state of a Windows service
 ```powershell
-Describe "Services" {
+Describe "Windows Services" {
     Context "SQL Server Service" {
         BeforeEach {
             $Params = @{
@@ -27,9 +33,10 @@ Describe "Services" {
     }
 }
 ```
+
 ### Test if a Windows service is running as a specified security principal
 ```powershell
-Describe "Services" {
+Describe "Windows Services" {
     Context "SQL Server Service" {
         BeforeEach {
             $Params = @{
@@ -45,6 +52,9 @@ Describe "Services" {
     }
 }
 ```
+
+## File System
+
 ### Test if a folder structure/path exists
 ```powershell
 Describe "D: Drive Folder Structure" {
@@ -67,5 +77,73 @@ Describe "SQL Server Backup" {
             $TimeSpan.TotalDays | Should -BeLessOrEqual 1
         }
     }
+}
+```
+
+## Local Groups
+
+### Test if a local group exists and contains specified security principals
+The following example tests if the local group _AppWidget Users_ exists on the computer _AppWidget01_ and contains the group _CONTOSO\SG AppWidget Users_:
+```powershell
+Describe "Local Groups" {
+    Context "AppWidget Users" {
+        It "Should exist" {
+            $LocalGroups = Invoke-Command -ScriptBlock {Get-LocalGroup} -ComputerName 'AppWidget01'
+            $LocalGroups.Name | Should -Contain 'AppWidget Users'
+        }
+        It "Should contain CONTOSO\SG AppWidget Users" {
+            $AppWidgetUsersMembers = Invoke-Command -ScriptBlock {Get-LocalGroupMember -Name 'AppWidget Users'} -ComputerName 'AppWidget01'
+            $AppWidgetUsersMembers.Name | Should -Contain 'CONTOSO\SG AppWidget Users'
+        }
+    }
+}
+```
+
+## Network
+
+### Test the IP configuration of a network adapter
+The following example describes the Ethernet01 network adapter on the AppWidget01 computer. Its IPv4 address should be _172.16.1.120_.
+```powershell
+Describe "Ethernet0" {
+    BeforeEach {
+        $ComputerName = 'AppWidget01'
+        $CimSession = New-CimSession -ComputerName $ComputerName
+    }
+    Context "IPv4 Address" {   
+        It "Should be 172.16.1.120" {
+            $IPAddresses = Get-NetIPAddress -CimSession $CimSession | Where-Object -FilterScript {$_.AddressFamily -eq 'IPv4' -and $_.IPAddress -ne '127.0.0.1'}
+            $IPAddresses.IPAddress | Should -Be '172.16.1.120'
+        }
+    }
+}
+```
+
+### Test network connectivity to another host
+The following example tests if the _AppWidget01_ computer can successfully connect to _172.16.2.30_ on port _80_:
+```powershell
+Describe "Network Connectivity" {
+    Context "172.16.2.30 Port 80" {
+        It "Should be successful" {
+            $Result = Invoke-Command -ComputerName 'AppWidget01' -ScriptBlock {Test-NetConnection -ComputerName '172.16.2.30' -Port '80'}
+            $Result.TcpTestSucceeded | Should -Be 'True'
+        }
+    }
+}
+```
+
+## Windows Task Scheduler
+
+### Test if a scheduled task in Windows Task Scheduler is running as a specified security principal
+The following example tests if all scheduled tasks created by _CONTOSO\jsmith.admin_ are configured to run as the _CONOTOSO\AppWidgetSvc_ security principal.
+```powershell
+Describe "AppWidget Scheduled Tasks" {
+    BeforeEach {
+        $AppWidgetScheduledTasks = Invoke-Command -ComputerName 'AppWidget01' -ScriptBlock {Get-ScheduledTask | Select-Object -Property *,@{name='UserId';expression={$_.Principal.UserId}} | Where-Object {$_.Author -eq 'CONTOSO\jsmith.admin'  -and $_.TaskName -notlike 'User_Feed*'} }
+    }
+        It "Should run as CONTOSO\AppWidgetSvc" {
+            foreach ($AppWidgetScheduledTask in $AppWidgetScheduledTasks) {
+                $AppWidgetScheduledTask.UserId | Should -Be 'CONTOSO\AppWidgetSvc'
+            }
+        }
 }
 ```
