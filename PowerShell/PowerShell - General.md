@@ -1,5 +1,18 @@
 # PowerShell - General
 
+### Splatting a script block with Invoke-Command
+```powershell
+# Store the script block in a variable
+$ScriptBlock = {Test-Path 'C:\'}
+
+# Use the variable in the parameter hash table when splatting
+$Params = @{
+    ScriptBlock     = $ScriptBlock
+    ComputerName    = 'SRV01'
+}
+$Result = Invoke-Command @Params
+```
+
 ### Force PowerShell to use TLS 1.2
 ```powershell
 [System.Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
