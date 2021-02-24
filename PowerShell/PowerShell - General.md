@@ -160,3 +160,22 @@ Reference: [Combine CSV Files with Windows 10 PowerShell](https://sites.pstcc.ed
 ```powershell
 Get-ChildItem -Filter *.csv | Select-Object -ExpandProperty FullName | Import-Csv | Export-Csv .\combinedcsvs.csv -NoTypeInformation -Append
 ```
+
+***
+
+### Use calculated properties to rename column names when importing a csv file
+Using this trick is useful when you do not have the ability to rename the column names in a csv.
+```powershell
+# Csv file contains three columns: User, O365License, ServicePlan
+$Path = "C:\Temp\MicrosoftTeamsUsers.csv"
+
+# Create a hash table of calculated properties to rename the column name in the csv file (Expression) to the new property name (Name)
+$CalculatedProperties = @(
+    @{ Name = 'UserPrincipalName'   ; Expression = { $_.'User' } }
+    @{ Name = 'AccountSkuId'        ; Expression = { $_.'O365License'  } }
+    @{ Name = 'ServicePlanName'     ; Expression = { $_.'ServicePlan'  } }
+)
+
+# Import the csv and use Select-Object with the hash table to rename the property names
+$TeamsUsers = Import-Csv -Path $Path | Select-Object -Property $CalculatedProperties
+```
