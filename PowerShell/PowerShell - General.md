@@ -179,3 +179,22 @@ $CalculatedProperties = @(
 # Import the csv and use Select-Object with the hash table to rename the property names
 $TeamsUsers = Import-Csv -Path $Path | Select-Object -Property $CalculatedProperties
 ```
+
+### Line break URL for easy readability
+This technique is useful for troubleshooting OAuth flows with Azure AD. This will start a new line for each & character for easy readability.
+```powershell
+$URL = 'https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize?client_id=6731de76-14a6-49ae-97bc-6eba6914391e&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%2Fmyapp%2F&response_mode=query&scope=https%3A%2F%2Fgraph.microsoft.com%2Fmail.read%20api%3A%2F%2F&state=12345&code_challenge=YTFjNjI1OWYzMzA3MTI4ZDY2Njg5M2RkNmVjNDE5YmEyZGRhOGYyM2IzNjdmZWFhMTQ1ODg3NDcxY2Nl&code_challenge_method=S256'
+
+$URL -split '(?=&)'
+```
+#### Example Output:
+```powershell
+https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize?client_id=6731de76-14a6-49ae-97bc-6eba6914391e
+&response_type=code
+&redirect_uri=http%3A%2F%2Flocalhost%2Fmyapp%2F
+&response_mode=query
+&scope=https%3A%2F%2Fgraph.microsoft.com%2Fmail.read%20api%3A%2F%2F
+&state=12345
+&code_challenge=YTFjNjI1OWYzMzA3MTI4ZDY2Njg5M2RkNmVjNDE5YmEyZGRhOGYyM2IzNjdmZWFhMTQ1ODg3NDcxY2Nl
+&code_challenge_method=S256
+```
