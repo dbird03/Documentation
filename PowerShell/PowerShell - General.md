@@ -198,3 +198,29 @@ https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize?client_id=6731d
 &code_challenge=YTFjNjI1OWYzMzA3MTI4ZDY2Njg5M2RkNmVjNDE5YmEyZGRhOGYyM2IzNjdmZWFhMTQ1ODg3NDcxY2Nl
 &code_challenge_method=S256
 ```
+
+### How to display full error message response when using Invoke-RestMethod
+Source: https://stackoverflow.com/questions/18771424/how-to-get-powershell-invoke-restmethod-to-return-body-of-http-500-code-response
+```powershell
+try
+{
+    $response = Invoke-RestMethod Method Get uri "$($uri)" -Headers $headers
+    return $response
+}
+catch
+{
+    Write-Host "Exception details: "
+    $e = $_.Exception
+    Write-Host ("`tMessage: " + $e.Message)
+    Write-Host ("`tStatus code: " + $e.Response.StatusCode)
+    Write-Host ("`tStatus description: " + $e.Response.StatusDescription)
+
+    Write-Host "`tResponse: " -NoNewline
+    $memStream = $e.Response.GetResponseStream()
+    $readStream = New-Object System.IO.StreamReader($memStream)
+    while ($readStream.Peek() -ne -1) {
+        Write-Host $readStream.ReadLine()
+    }
+    $readStream.Dispose();
+}
+```
