@@ -224,3 +224,16 @@ catch
     $readStream.Dispose();
 }
 ```
+
+### Redact Microsoft GUIDs using the -replace operator and RegEx
+```powershell
+$RedactedText = $UnredactedText -replace '(?im)[{(]?[0-9A-F]{8}[-]?(?:[0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?','XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
+```
+Example:
+```
+PS C:\> $UnredactedText = '50afc1dd-8363-44c4-950c-7ef4430947a7'
+PS C:\> $RedactedText = $UnredactedText -replace '(?im)[{(]?[0-9A-F]{8}[-]?(?:[0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?','XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
+PS C:\> $RedactedText
+
+XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+```
