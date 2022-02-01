@@ -3,11 +3,11 @@
 ### View an Azure AD tenant's public information
 The following URL can be used to view an Azure AD tenant's public information such as their TenantId GUID and other details:
 
-`https:login.microsoftonline.com/{Domain}/.well-known/openid-configuration`
+`https://login.microsoftonline.com/{Domain}/.well-known/openid-configuration`
 
 Example: 
 ```
-https:login.microsoftonline.com/microsoft.com/.well-known/openid-configuration
+https://login.microsoftonline.com/microsoft.com/.well-known/openid-configuration
 
 {
     "token_endpoint": "https://login.microsoftonline.com/72f988bf-86f1-41af-91ab-2d7cd011db47/oauth2/token",
