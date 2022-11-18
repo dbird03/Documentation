@@ -19,3 +19,29 @@
     Color: Auto
     Script: Western
     ```
+
+### Forking email threads
+Forking email threads is useful for continuing an existing email thread with a reduced or alternate list of recipients. Forked emails can either be displayed in the existing conversation thread or in a new conversation thread depending on the subject line used by the sender who forks the email.
+
+Display forked email in the existing conversation thead:
+Keep the "RE:" in the subject line.
+```
+    Original subject line:
+    RE: Project meeting notes
+    
+    Forked subject line:
+    RE: [Engineering Only] Project meeting notes
+    -OR-
+    [Engineering Only] RE: Project meeting notes
+    
+```
+
+Display forked email in a new conversation thread:
+Delete the "RE:" from the subject line.
+```
+    Original subject line:
+    RE: Project meeting notes
+    
+    Forked subject line:
+    [Engineering Only] Project meeting notes
+```
