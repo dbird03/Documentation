@@ -32,25 +32,39 @@ For example, there is a business application in your tenant that no longer requi
 Original source: [How to update the OAuth2 permission grants for an Azure AD service principal (andrewmatveychuk.com)](
 https://andrewmatveychuk.com/how-to-update-the-oauth2-permission-grants-for-an-azure-ad-service-principal/)
 
-1. Visit Graph Explorer and sign in with a privileged account (e.g. Global Administrator).
-1. Search for the service principal you want to update the OAuth2PermissionGrants for.
-    ```
-    GET https://graph.microsoft.com/v1.0/servicePrincipals?$search="displayName:your_app_name"
-    ```
-1. Note the service principal's Object ID (this is the "id" property in the response. NOT the "appId" property.)
-1. Get all the OAuth2PermissionGrants in the tenant. In the response, search the Object ID from Step 3 and find the object where the Object ID matches the "clientId" property. Note the "id" property in this object. This "id" property is the "Grant ID".
-    ```
-    GET HTTPS://graph.microsoft.com/v1.0/oauth2PermissionGrants
-    ```
-    > **Note about property names** <br/>
-    > The "id" property is the response from /servicePrincipals is the "clientId" property in the response from /oauth2PermissionGrants.<br/>
-    > The "id" property in the response from /oauth2PermissionGrants is the Grant ID. The Grant ID is a unique value that represents the OAuth2PermissionGrants assigned to a service principal.
+1. Sign into Azure AD and go to Enterprise Applications. Search for the service principal and note down the Object ID (**Note:** Do NOT use the Application ID (Client ID)).
+1. Visit Graph Explorer and sign in.
+1. Search for the OAuth2PermissionGrants objects belonging to the service principal using the filter functionality of Microsoft Graph.
+    >**Note about property names**<br/>
+    > The property names can be confusing between different Microsoft Graph APIs and what is displayed in the Azure AD portal. The filter query uses "clientId", but this is still used with the Object ID value of the service principal and NOT the Application ID / Client ID value.
 
-    > **Note about OAuth2PermissionGrants** <br/>
-    > OAuth2PermissionGrants exist per user or group of users. For example, if a service principal has a set of admin consented permissions for ALL users in the organization, and then two global administrators have consented to their own set of permissions, there will be three OAuth2PermissionGrants for the service principal. This means the the /oauth2PermissionGrants endpoint will return three Grant ID objects, so the "clientId" value will be present in each one. The "consentType" and "principalId" properties will show who the OAuth2PermissionsGrant applies to.
+    ```
+    GET https://graph.microsoft.com/v1.0/oauth2PermissionGrants?$filter=clientId eq '{ObjectId}'
+    ```
+1. In the response, you will see an OAuth2PermissionGrants object for each type of consent. The "id" property represents each OAuth2PermissionGrants object.
+    > **Note about OAuth2PermissionGrants**<br/>
+    > OAuth2PermissionGrants exist per user or group of users.<br/><br/>
+    > For example, if a service principal has a set of admin consented permissions for all users in the organization, and then two global administrators have consented to their own set of user consented permissions, there will be three OAuth2PermissionGrants objects for the service principal. The "consentType" and "principalId" properties will show who the OAuth2PermissionsGrant applies to.<br/><br/>
+    > "ConsentType":"Allprincipals" is the Admin consented tab in the Permissions page of the Enterprise Application in the Azure portal UI.
+1. At this point, you can use the DELETE method to completely delete the permission grants or the PATCH method with the "scope" property to update the permissions.
+    
+    **Example:**
 
-1. Get the OAuth2PermissionsGrant objects using the Grant ID from Step 4.<br/>
+    This will completely delete the OAuth2PermissionGrants object for {id}.
+
     ```
-    GET https://graph.microsoft.com/v1.0/oauth2PermissionGrants/{id}
+    DELETE https://graph.microsoft.com/v1.0/oauth2PermissionGrants/{id}
     ```
-1. At this point, you can use the DELETE method to completely delete the permission grant or the PATCH method to update the "scope" property.
+    **Example:**
+    
+    This will update the OAuth2PermissionGrants object for {id} to only contain the openid, profile, offline_access, User.Read, and Directory.AccessAsUser.All permissions. 
+    
+    ```
+    PATCH https://graph.microsoft.com/v1.0/oauth2PermissionGrants/{id}
+    ```
+    ```
+    {
+        "scope": openid profile offline_access User.Read Directory.AccessAsUser.All 
+    }
+    ```
+---
