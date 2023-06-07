@@ -1,4 +1,11 @@
 # Visual Studio Code (VS Code)
+## General
+### Open GitHub repository in Visual Studio Code within a web browser
+1. Sign in to GitHub.
+2. Go to a repository's main page (github.com/user/repository).
+3. Hit the Period key (<kbd>.</kbd>) on your keyboard.
+4. The repository should open within Visual Studio Code.
+---
 ## Themes
 ### How to change the VS Code title bar to red
 This theme customization is a helpful visual cue if you ever need to run VS Code as another user account, such as an admin account with elevated priviledges.
