@@ -1,6 +1,9 @@
 # Azure Active Directory
 
 ## General
+### Get Azure AD tenant details by domain name or tenant ID
+The [tenantInformation](https://learn.microsoft.com/en-us/graph/api/resources/tenantinformation?view=graph-rest-1.0) Microsoft Graph API can be used to get an Azure AD tenant's details using either the domain name or tenant ID. 
+
 ### View an Azure AD tenant's public information
 The following URL can be used to view an Azure AD tenant's public information such as their TenantId GUID and other details:
 
