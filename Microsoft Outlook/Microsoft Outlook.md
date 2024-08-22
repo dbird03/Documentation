@@ -81,3 +81,22 @@ AND (ALL clauses must be true)
  |- To doesn't contain Contoso-Engineering
  |- Cc doesn't contain Contoso-Engineering
 ```
+
+# Troubleshooting
+
+## Inbox rules corrupted
+#### Issue
+When editing inbox rules, Outlook displays prompt "The rules on this computer do not match the rules on Microsoft Exchange. Only one set of rules can be kept. You will usually want to keep the rules on the server. Which rules do you want to keep?".
+
+#### Resolution 1: Restore inbox rules from a backup
+
+> [!CAUTION]
+> Ensure you have a recent inbox rule backup file (.rwz) before proceeding!
+
+1. Close Outlook
+2. Delete the Outlook client rules using **Start > Run > outlook.exe /cleanrules**
+3. Close Outlook
+4. Delete the Exchange server rules using **Start > Run > outlook.exe /cleanserverrules**
+5. Close Outlook
+6. Open Outlook
+7. Navigate to **File > Manage Rules & Alerts > Options > Import Rules** and select your backup file (.rwz)
