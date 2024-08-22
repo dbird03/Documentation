@@ -84,10 +84,10 @@ In Folder is (exactly) Inbox
 
 Query Builder:
 OR (ANY clause may be true)
- |- To doesn't contain John Smith
- |- Cc doesn't contain John Smith
- |- To doesn't contain Contoso-Engineering
- |- Cc doesn't contain Contoso-Engineering
+ |- To contains John Smith
+ |- Cc contains John Smith
+ |- To contains Contoso-Engineering
+ |- Cc contains Contoso-Engineering
 ```
 #### Unfocused Inbox
 This search folder finds any messages where the To or Cc field doesn't contain your name (John Smith) or the name of a team distribution list you are a part of (Contoso-Engineering). This is especially useful for finding emails that can be deleted.
