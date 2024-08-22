@@ -20,7 +20,28 @@
     Color: Auto
     Script: Western
     ```
-### Miscellaneous
+
+## Inbox Rules
+
+#### Emails sent to a single email address with varying display names
+This rule is useful for creating inbox rules when an email may be sent to the same email address but contain varying different display names. For example, "All Employees \<communications@contoso.com\>" or "Engineering Employees \<communications@contoso.com\>".
+
+1. Create a new rule
+2. During **Step 1: Select condition(s)**, select **sent to people or public group**.
+3. Click the **people or public group** link, type the display name in the **To** field, and click **OK**.
+
+    > [!NOTE]
+    > This should not resolve to any contact in the address book. If you receive a pop up about the name not being recognized, click **Cancel** and continue with the rule creation.
+4. Click next and continue with the rule creation wizard.
+
+    > [!NOTE]
+    > You need to create a new rule for each display name, even if you take the same action on them. For example, if you want emails from "All Employees" and "Engineering Employees" to go to the same folder, you need two separate rules.
+
+
+
+
+
+## Miscellaneous
 #### Forking email threads
 Forking email threads is useful for continuing an existing email thread with a reduced or alternate list of recipients. Forked emails can either be displayed in the existing conversation thread or in a new conversation thread depending on the subject line used by the sender who forks the email.
 
